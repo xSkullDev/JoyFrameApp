@@ -1,11 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>JoyFrame - PhotoBooth</title>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <main class="container">
+            <h1>JoyFrame PhotoBooth</h1>
+
+            <section class="booth">
+                <div class="preview-wrap">
+                    <video id="video" autoplay playsinline></video>
+                    <canvas id="overlayCanvas" class="overlay-canvas"></canvas>
+                    <div id="countdown" class="countdown hidden"></div>
+                </div>
+
+                <div class="controls">
+                    <div class="row">
+                        <button id="captureBtn" class="primary">Ambil Foto</button>
+                        <button id="downloadLast" disabled>Download Terakhir</button>
+                        <button id="clearGallery">Bersihkan Galeri</button>
+                    </div>
+
+                    <div class="row">
+                        <label>Filter: <select id="filterSelect">
+                            <option value="none">Normal</option>
+                            <option value="grayscale(100%)">Grayscale</option>
+                            <option value="sepia(100%)">Sepia</option>
+                            <option value="invert(100%)">Invert</option>
+                            <option value="contrast(150%)">Kontras Tinggi</option>
+                            <option value="blur(2px)">Blur</option>
+                        </select></label>
+                        <label>Countdown: <select id="countdownSelect">
+                            <option value="0">Mati</option>
+                            <option value="2">2s</option>
+                            <option value="3" selected>3s</option>
+                            <option value="5">5s</option>
+                        </select></label>
+                    </div>
+
+                    <div class="row stickers">
+                        <span>Stiker:</span>
+                        <button class="sticker-btn" data-sticker="heart">❤</button>
+                        <button class="sticker-btn" data-sticker="sunglasses">🕶️</button>
+                        <button class="sticker-btn" data-sticker="star">⭐</button>
+                        <button id="removeSticker">Hapus Stiker</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="gallery">
+                <h2>Galeri</h2>
+                <div id="galleryList" class="gallery-list"></div>
+            </section>
+        </main>
+
+        <script src="script.js"></script>
+    </body>
 </html>
