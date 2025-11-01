@@ -1,5 +1,3 @@
-
-// Simple PhotoBooth implementation (Indonesian UI)
 const video = document.getElementById('video');
 const overlayCanvas = document.getElementById('overlayCanvas');
 const captureBtn = document.getElementById('captureBtn');
@@ -12,7 +10,7 @@ const clearGalleryBtn = document.getElementById('clearGallery');
 
 let stream = null;
 let currentFilter = 'none';
-let selectedSticker = null; // string key
+let selectedSticker = null;
 let lastPhotoDataUrl = null;
 const gallery = [];
 
