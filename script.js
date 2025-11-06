@@ -138,7 +138,6 @@ function downloadDataUrl(dataUrl, filename){
 	const a = document.createElement('a'); a.href = dataUrl; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
 }
 
-// UI wiring
 captureBtn.addEventListener('click', ()=>{ startCountdownThenCapture(); });
 filterSelect.addEventListener('change', (e)=>{ setFilter(e.target.value); });
 
