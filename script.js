@@ -135,7 +135,12 @@ function renderGallery(){
 }
 
 function downloadDataUrl(dataUrl, filename){
-	const a = document.createElement('a'); a.href = dataUrl; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+	const a = document.createElement('a'); 
+	a.href = dataUrl; 
+	a.download = filename; 
+	document.body.appendChild(a); 
+	a.click(); 
+	a.remove();
 }
 
 captureBtn.addEventListener('click', ()=>{ startCountdownThenCapture(); });
@@ -150,9 +155,19 @@ document.querySelectorAll('.sticker-btn').forEach(b=>{
 		setTimeout(()=>ctx.clearRect(0,0,overlayCanvas.width, overlayCanvas.height),800);
 	});
 });
-document.getElementById('removeSticker').addEventListener('click', ()=>{ selectedSticker = null; overlayCanvas.getContext('2d').clearRect(0,0,overlayCanvas.width, overlayCanvas.height);} );
 
-downloadLast.addEventListener('click', ()=>{ if(lastPhotoDataUrl) downloadDataUrl(lastPhotoDataUrl, 'joyframe-last.png'); });
-clearGalleryBtn.addEventListener('click', ()=>{ gallery.length = 0; renderGallery(); downloadLast.disabled = true; });
+document.getElementById('removeSticker').addEventListener('click', ()=>{ 
+	selectedSticker = null; 
+	overlayCanvas.getContext('2d').clearRect(0,0,overlayCanvas.width, overlayCanvas.height);
+});
+
+downloadLast.addEventListener('click', ()=>{ 
+	if(lastPhotoDataUrl) downloadDataUrl(lastPhotoDataUrl, 'joyframe-last.png'); 
+});
+
+clearGalleryBtn.addEventListener('click', ()=>{ 
+	gallery.length = 0; renderGallery(); 
+	downloadLast.disabled = true; 
+});
 
 window.addEventListener('load', ()=>{ setFilter(currentFilter); startCamera(); });
