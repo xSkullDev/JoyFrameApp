@@ -3,83 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JoyFrame - Web Photobooth</title>
+    <title>JoyFrame Pro - Photobooth</title>
     <style>
-        body { font-family: sans-serif; text-align: center; background: #f0f2f5; margin: 0; padding: 20px; }
-        .booth-container { position: relative; display: inline-block; border: 10px solid #fff; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; background: #000; }
-        video { display: block; width: 640px; height: 480px; transform: scaleX(-1); } /* Mirroring */
-        #frame-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-        .controls { margin-top: 20px; }
-        button { padding: 12px 25px; font-size: 16px; cursor: pointer; border: none; border-radius: 5px; background: #ff4757; color: white; font-weight: bold; transition: 0.3s; }
-        button:hover { background: #ff6b81; }
-        canvas { display: none; } /* Tersembunyi, hanya untuk proses rendering */
-        #gallery { margin-top: 30px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-        #gallery img { width: 200px; border: 5px solid #fff; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        :root {
+            --primary: #ff4757;
+            --dark: #2f3542;
+            --light: #ffffff;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f1f2f6; margin: 0; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+
+        /* Container Utama */
+        .booth-wrapper { position: relative; width: 640px; border-radius: 20px; background: var(--dark); padding: 15px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
+
+        .video-container { position: relative; width: 640px; height: 480px; background: #000; border-radius: 10px; overflow: hidden; }
+        
+        video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+
+        /* Overlay Frame */
+        #frame-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+
+        /* Countdown Visual */
+        #countdown { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 120px; color: white; font-weight: bold; text-shadow: 0 0 20px rgba(0,0,0,0.5); z-index: 10; display: none; }
+
+        /* Flash Effect */
+        #flash { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; z-index: 15; pointer-events: none; }
+
+        /* Panel Kontrol */
+        .controls { margin-top: 25px; display: flex; gap: 15px; align-items: center; }
+        
+        button#capture-btn { padding: 15px 40px; font-size: 18px; border: none; border-radius: 50px; background: var(--primary); color: white; cursor: pointer; font-weight: bold; box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4); transition: 0.3s; }
+        button#capture-btn:disabled { background: #ccc; box-shadow: none; }
+
+        /* Frame Selector */
+        .frame-selector { margin-top: 20px; display: flex; gap: 10px; overflow-x: auto; padding: 10px; width: 640px; }
+        .frame-option { width: 100px; height: 75px; border: 3px solid transparent; border-radius: 8px; cursor: pointer; transition: 0.2s; background: #fff; object-fit: contain; }
+        .frame-option.active { border-color: var(--primary); transform: scale(1.05); }
+
+        #gallery { margin-top: 40px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 640px; }
+        #gallery img { width: 100%; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 5px solid white; }
     </style>
 </head>
 <body>
 
-    <h1>JoyFrame Photobooth</h1>
-    
-    <div class="booth-container">
-        <video id="video" autoplay playsinline></video>
-        <img id="frame-overlay" src="https://raw.githubusercontent.com/xskulldev/JoyFrameApp/main/assets/frames/frame1.png" alt="frame">
+    <h1 style="color: var(--dark)">JoyFrame <span style="color: var(--primary)">Studio</span></h1>
+
+    <div class="booth-wrapper">
+        <div class="video-container">
+            <video id="video" autoplay playsinline></video>
+            <img id="frame-overlay" src="" alt="">
+            <div id="countdown">3</div>
+            <div id="flash"></div>
+        </div>
     </div>
+
+    <div class="frame-selector" id="frame-list">
+        </div>
 
     <div class="controls">
-        <button id="capture">AMBIL FOTO</button>
+        <button id="capture-btn">AMBIL FOTO (3s)</button>
     </div>
 
-    <canvas id="canvas" width="640" height="480"></canvas>
-
-    <h2>Galeri Anda</h2>
     <div id="gallery"></div>
+    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
 
     <script>
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
-        const captureBtn = document.getElementById('capture');
+        const captureBtn = document.getElementById('capture-btn');
         const frameOverlay = document.getElementById('frame-overlay');
+        const countdownEl = document.getElementById('countdown');
+        const flashEl = document.getElementById('flash');
         const gallery = document.getElementById('gallery');
 
-        // 1. Akses Kamera
+        // Daftar Frame (Ganti URL dengan gambar PNG transparan Anda)
+        const frames = [
+            'https://raw.githubusercontent.com/xskulldev/JoyFrameApp/main/assets/frames/frame1.png',
+            'https://raw.githubusercontent.com/xskulldev/JoyFrameApp/main/assets/frames/frame2.png',
+            'https://raw.githubusercontent.com/xskulldev/JoyFrameApp/main/assets/frames/frame3.png'
+        ];
+
+        // 1. Inisialisasi Frame Selector
+        function initFrames() {
+            const list = document.getElementById('frame-list');
+            frames.forEach((url, index) => {
+                const img = document.createElement('img');
+                img.src = url;
+                img.className = `frame-option ${index === 0 ? 'active' : ''}`;
+                if(index === 0) frameOverlay.src = url;
+                
+                img.onclick = () => {
+                    document.querySelectorAll('.frame-option').forEach(el => el.classList.remove('active'));
+                    img.classList.add('active');
+                    frameOverlay.src = url;
+                };
+                list.appendChild(img);
+            });
+        }
+
+        // 2. Akses Kamera
         async function setupCamera() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } });
                 video.srcObject = stream;
             } catch (err) {
-                alert("Gagal mengakses kamera: " + err);
+                alert("Izin kamera ditolak!");
             }
         }
 
-        // 2. Tangkap Foto dan Gabungkan dengan Frame
-        captureBtn.addEventListener('click', () => {
-            const context = canvas.getContext('2d');
-            
-            // Gambar Video ke Canvas (Mirroring)
-            context.save();
-            context.scale(-1, 1);
-            context.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
-            context.restore();
+        // 3. Logika Countdown & Capture
+        captureBtn.onclick = () => {
+            let count = 3;
+            captureBtn.disabled = true;
+            countdownEl.style.display = 'block';
+            countdownEl.innerText = count;
 
-            // Gambar Overlay Frame di atasnya
-            context.drawImage(frameOverlay, 0, 0, canvas.width, canvas.height);
+            const timer = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdownEl.innerText = count;
+                } else {
+                    clearInterval(timer);
+                    countdownEl.style.display = 'none';
+                    takePhoto();
+                }
+            }, 1000);
+        };
 
-            // Konversi ke Gambar
-            const imageData = canvas.toDataURL('image/png');
+        // 4. Proses Rendering Foto
+        function takePhoto() {
+            // Efek Flash
+            flashEl.style.opacity = '1';
+            setTimeout(() => flashEl.style.opacity = '0', 100);
+
+            const ctx = canvas.getContext('2d');
             
-            // Tampilkan di Galeri
+            // Gambar Video (Mirroring)
+            ctx.save();
+            ctx.scale(-1, 1);
+            ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+            ctx.restore();
+
+            // Gambar Frame
+            ctx.drawImage(frameOverlay, 0, 0, canvas.width, canvas.height);
+
+            // Simpan hasil
+            const data = canvas.toDataURL('image/png');
             const img = document.createElement('img');
-            img.src = imageData;
+            img.src = data;
             gallery.prepend(img);
 
-            // Automatis Download (Opsional)
-            const link = document.createElement('a');
-            link.download = 'photobooth-capture.png';
-            link.href = imageData;
-            link.click();
-        });
+            // Download otomatis
+            const a = document.createElement('a');
+            a.href = data;
+            a.download = `JoyFrame_${Date.now()}.png`;
+            a.click();
 
+            captureBtn.disabled = false;
+        }
+
+        initFrames();
         setupCamera();
     </script>
 </body>
