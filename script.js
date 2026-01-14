@@ -108,9 +108,16 @@ function capturePhoto() {
     tctx.drawImage(video, 0, 0, tmp.width, tmp.height);
   }
   tctx.restore();
-  // draw overlays using same logic but scaled
-  // reuse drawOverlay by drawing existing overlay canvas onto tmp
-  tctx.drawImage(overlay, 0, 0, tmp.width, tmp.height);
+  // draw overlays using same logic but scaled; mirror overlay when preview is flipped
+  tctx.save();
+  if (mirrored) {
+    tctx.translate(tmp.width, 0);
+    tctx.scale(-1, 1);
+    tctx.drawImage(overlay, 0, 0, tmp.width, tmp.height);
+  } else {
+    tctx.drawImage(overlay, 0, 0, tmp.width, tmp.height);
+  }
+  tctx.restore();
 
   const dataUrl = tmp.toDataURL('image/png');
   addToGallery(dataUrl);
