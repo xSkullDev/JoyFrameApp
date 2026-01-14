@@ -67,6 +67,7 @@ video {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transform: scaleX(-1); /* mirror preview */
 }
 
 /* Overlay Frame */
@@ -79,6 +80,7 @@ video {
     pointer-events: none;
     z-index: 5;
     object-fit: cover;
+    transform: scaleX(-1); /* mirror overlay to match preview */
 }
 
 /* Countdown Visual */
