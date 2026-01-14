@@ -28,10 +28,14 @@ async function startCamera() {
 }
 
 function setCanvasSize() {
-  overlay.width = video.videoWidth || 640;
-  overlay.height = video.videoHeight || 480;
-  overlay.style.width = '100%';
-  overlay.style.height = '100%';
+  // size drawing buffer to video's intrinsic size
+  const vw = video.videoWidth || 640;
+  const vh = video.videoHeight || 480;
+  overlay.width = vw;
+  overlay.height = vh;
+  // size CSS box to fit inside preview padding (14px each side)
+  overlay.style.width = `calc(100% - 28px)`;
+  overlay.style.height = `calc(100% - 28px)`;
 }
 
 function loop() {
