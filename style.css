@@ -2,7 +2,7 @@
 :root{--bg:#0f172a; --accent:#10b981; --muted:#cbd5e1}
 html,body{height:100%}
 body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial; margin:0; background:var(--bg); color:#fff; display:flex; align-items:center; justify-content:center; min-height:100vh}
-.app{width:500px; max-width:96%; text-align:center; padding:14px}
+.app{width:700px; max-width:96%; text-align:center; padding:14px}
 .app h1{margin:0 0 10px 0; font-size:22px}
 
 .camera{position:relative; background:#000; overflow:hidden; border-radius:10px; aspect-ratio:16/9; max-height:56vh}
