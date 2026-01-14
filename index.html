@@ -1,45 +1,42 @@
 <!doctype html>
 <html lang="id">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>JoyFrame Photobooth</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <main class="app">
-      <h1>JoyFrame Photobooth</h1>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>JoyFrame Photobooth</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <h1>JoyFrame Photobooth</h1>
+    <div class="camera">
+      <video id="video" autoplay playsinline></video>
+      <canvas id="canvas"></canvas>
+    </div>
 
-      <section class="camera" id="cameraArea">
-        <video id="video" autoplay playsinline muted></video>
-        <canvas id="canvas" aria-hidden="true"></canvas>
-      </section>
+    <div class="controls">
+      <label for="overlaySelect">Overlay:</label>
+      <select id="overlaySelect">
+        <option value="none">Tanpa Overlay</option>
+        <option value="frame">Frame Kayu</option>
+        <option value="hearts">Hearts</option>
+        <option value="vintage">Vintage</option>
+        <option value="text">Teks "Smile"</option>
+      </select>
 
-      <section class="controls">
-        <label for="overlaySelect">Overlay</label>
-        <select id="overlaySelect" aria-label="Pilih overlay">
-          <option value="none">Tanpa Overlay</option>
-          <option value="frame">Frame</option>
-          <option value="hearts">Hearts</option>
-          <option value="vintage">Vintage</option>
-          <option value="text">Teks Smile</option>
-        </select>
+      <button id="capture">Ambil Foto</button>
+      <button id="download" disabled>Download</button>
+      <button id="switchMirror">Toggle Mirror</button>
+      <input id="uploadSticker" type="file" accept="image/*">
+    </div>
 
-        <button id="capture">Ambil Foto</button>
-        <button id="download" disabled>Download</button>
-        <button id="switchMirror">Mirror</button>
-        <button id="fullscreenBtn">Layar Penuh</button>
-        <button id="pipBtn">PiP</button>
-        <input id="uploadSticker" type="file" accept="image/*" aria-label="Unggah stiker">
-      </section>
+    <div class="preview">
+      <img id="photoPreview" alt="Preview foto">
+    </div>
 
-      <section class="preview">
-        <img id="photoPreview" alt="Preview foto">
-      </section>
+    <p class="hint">Izinkan kamera bila diminta. Unggah stiker untuk menambah foto.</p>
+  </div>
 
-      <p class="hint">Buka lewat localhost/HTTPS bila kamera tidak muncul.</p>
-    </main>
-
-    <script src="script.js"></script>
-  </body>
+  <script src="script.js"></script>
+</body>
 </html>
