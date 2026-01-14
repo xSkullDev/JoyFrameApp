@@ -1,44 +1,42 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JoyFrame Pro - Photobooth</title>
-
-    <!-- Gaya dipindahkan ke file style.css -->
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>JoyFrame Photobooth</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <h1 style="color: var(--dark)">JoyFrame <span style="color: var(--primary)">Studio</span></h1>
-
-    <div class="booth-wrapper">
-        <div class="video-container">
-            <video id="video" autoplay playsinline></video>
-            <img id="frame-overlay" src="" alt="">
-            <div id="countdown">3</div>
-            <div id="flash"></div>
-        </div>
+  <div class="app">
+    <h1>JoyFrame Photobooth</h1>
+    <div class="camera">
+      <video id="video" autoplay playsinline></video>
+      <canvas id="canvas"></canvas>
     </div>
-
-    <div class="frame-selector" id="frame-list">
-        </div>
-
-    <div class="filter-selector">
-    <button class="filter-btn active" data-filter="none">Normal</button>
-    <button class="filter-btn" data-filter="grayscale(1)">B&W</button>
-    <button class="filter-btn" data-filter="sepia(1)">Sepia</button>
-    <button class="filter-btn" data-filter="sepia(0.5) contrast(1.2) brightness(0.9)">Vintage</button>
-</div>
 
     <div class="controls">
-        <button id="capture-btn">AMBIL FOTO (3s)</button>
+      <label for="overlaySelect">Overlay:</label>
+      <select id="overlaySelect">
+        <option value="none">Tanpa Overlay</option>
+        <option value="frame">Frame Kayu</option>
+        <option value="hearts">Hearts</option>
+        <option value="vintage">Vintage</option>
+        <option value="text">Teks "Smile"</option>
+      </select>
+
+      <button id="capture">Ambil Foto</button>
+      <button id="download" disabled>Download</button>
+      <button id="switchMirror">Toggle Mirror</button>
+      <input id="uploadSticker" type="file" accept="image/*">
     </div>
 
-    <div id="gallery"></div>
-    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+    <div class="preview">
+      <img id="photoPreview" alt="Preview foto">
+    </div>
 
-    <!-- Skrip dipindahkan ke file script.js -->
-    <script src="script.js"></script>
+    <p class="hint">Izinkan kamera bila diminta. Unggah stiker untuk menambah foto.</p>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>

@@ -1,123 +1,109 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Elemen
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const captureBtn = document.getElementById('capture-btn');
-    const frameOverlay = document.getElementById('frame-overlay');
-    const countdownEl = document.getElementById('countdown');
-    const flashEl = document.getElementById('flash');
-    const gallery = document.getElementById('gallery');
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const overlaySelect = document.getElementById('overlaySelect');
+const captureBtn = document.getElementById('capture');
+const downloadBtn = document.getElementById('download');
+const photoPreview = document.getElementById('photoPreview');
+const switchMirrorBtn = document.getElementById('switchMirror');
+const uploadSticker = document.getElementById('uploadSticker');
 
-    let currentFilter = 'none';
+let mirror = true;
+let stickerImg = null;
 
-    // Daftar Frame (ganti URL ke frame PNG Anda atau file lokal)
-    const frames = [
-        'https://raw.githubusercontent.com/xskulldev/JoyFrameApp/main/assets/frames/frame1.png',
-        'https://raw.githubusercontent.com/xskulldev/JoyFrameApp/main/assets/frames/frame2.png',
-        'https://raw.githubusercontent.com/xskulldev/JoyFrameApp/main/assets/frames/frame3.png'
-    ];
+async function startCamera(){
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({video:{width:1280, height:720}, audio:false});
+    video.srcObject = stream;
+    await video.play();
+    resizeCanvas();
+    requestAnimationFrame(drawLoop);
+  }catch(e){
+    alert('Gagal mengakses kamera: ' + (e.message || e));
+  }
+}
 
-    // Inisialisasi frame selector
-    function initFrames() {
-        const list = document.getElementById('frame-list');
-        frames.forEach((url, index) => {
-            const img = document.createElement('img');
-            img.src = url;
-            img.className = `frame-option ${index === 0 ? 'active' : ''}`;
-            img.alt = `frame-${index+1}`;
-            img.width = 100;
-            img.height = 75;
-            if (index === 0) frameOverlay.src = url;
-            img.addEventListener('click', () => {
-                document.querySelectorAll('.frame-option').forEach(el => el.classList.remove('active'));
-                img.classList.add('active');
-                frameOverlay.src = url;
-            });
-            list.appendChild(img);
-        });
-    }
+function resizeCanvas(){
+  canvas.width = video.videoWidth || 640;
+  canvas.height = video.videoHeight || 480;
+  canvas.style.width = '100%';
+}
 
-    // Setup kamera
-    async function setupCamera() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } });
-            video.srcObject = stream;
-        } catch (err) {
-            alert("Izin kamera ditolak atau tidak tersedia.");
-            console.error(err);
-        }
-    }
+function drawLoop(){
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.clearRect(0,0,w,h);
+  ctx.save();
+  if(mirror){
+    ctx.translate(w,0);
+    ctx.scale(-1,1);
+  }
+  ctx.drawImage(video,0,0,w,h);
+  ctx.restore();
+  drawOverlay(ctx,w,h);
+  requestAnimationFrame(drawLoop);
+}
 
-    // Filter buttons handling
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentFilter = btn.getAttribute('data-filter') || 'none';
-            video.style.filter = currentFilter === 'none' ? 'none' : currentFilter;
-        });
-    });
+function drawOverlay(ctx,w,h){
+  const val = overlaySelect.value;
+  if(val === 'frame'){
+    ctx.strokeStyle = '#8B5E3C';
+    ctx.lineWidth = Math.max(10, w * 0.03);
+    ctx.strokeRect(ctx.lineWidth/2, ctx.lineWidth/2, w - ctx.lineWidth, h - ctx.lineWidth);
+  }else if(val === 'hearts'){
+    ctx.fillStyle = 'rgba(255,0,100,0.9)';
+    ctx.font = `${Math.floor(w/6)}px serif`;
+    ctx.fillText('❤️', w*0.05, h*0.25);
+    ctx.fillText('💖', w*0.72, h*0.82);
+  }else if(val === 'vintage'){
+    ctx.fillStyle = 'rgba(255,240,200,0.18)';
+    ctx.fillRect(0,0,w,h);
+    ctx.fillStyle = 'rgba(0,0,0,0.18)';
+    ctx.fillRect(0,0,w, h*0.06);
+    ctx.fillRect(0,h*0.94,w, h*0.06);
+  }else if(val === 'text'){
+    ctx.fillStyle = 'white';
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 6;
+    ctx.font = `${Math.floor(w/12)}px sans-serif`;
+    const text = 'Smile :)';
+    const tw = ctx.measureText(text).width;
+    const x = (w - tw)/2;
+    const y = h*0.12;
+    ctx.strokeText(text, x, y);
+    ctx.fillText(text, x, y);
+  }
 
-    // Countdown + capture
-    captureBtn.addEventListener('click', () => {
-        let count = 3;
-        captureBtn.disabled = true;
-        countdownEl.style.display = 'block';
-        countdownEl.innerText = count;
-        const timer = setInterval(() => {
-            count--;
-            if (count > 0) {
-                countdownEl.innerText = count;
-            } else {
-                clearInterval(timer);
-                countdownEl.style.display = 'none';
-                takePhoto();
-            }
-        }, 1000);
-    });
+  if(stickerImg){
+    const maxW = w * 0.35;
+    const scale = Math.min(1, maxW / stickerImg.width);
+    const iw = stickerImg.width * scale;
+    const ih = stickerImg.height * scale;
+    ctx.drawImage(stickerImg, w - iw - 20, h - ih - 20, iw, ih);
+  }
+}
 
-    // Ambil foto ke canvas, terapkan filter, gambar frame, simpan & unduh
-    function takePhoto() {
-        // Flash effect
-        flashEl.style.opacity = '1';
-        setTimeout(() => flashEl.style.opacity = '0', 120);
-
-        const ctx = canvas.getContext('2d');
-
-        // Terapkan filter ke canvas (CSS filter string langsung didukung oleh ctx.filter)
-        ctx.filter = currentFilter === 'none' ? 'none' : currentFilter;
-
-        // Gambar video WITHOUT mirror (tampilan sekarang tidak terbalik)
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        // Gambar frame tanpa filter agar warna aslinya tetap
-        const prevFilter = ctx.filter;
-        if (frameOverlay.complete && frameOverlay.naturalWidth !== 0) {
-            ctx.filter = 'none';
-            ctx.drawImage(frameOverlay, 0, 0, canvas.width, canvas.height);
-            ctx.filter = prevFilter;
-        }
-
-        // Simpan hasil
-        const data = canvas.toDataURL('image/png');
-        const img = document.createElement('img');
-        img.src = data;
-        img.alt = 'joyframe-photo';
-        gallery.prepend(img);
-
-        // Auto-download
-        const a = document.createElement('a');
-        a.href = data;
-        a.download = `JoyFrame_${Date.now()}.png`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-
-        captureBtn.disabled = false;
-    }
-
-    // Inisialisasi
-    initFrames();
-    setupCamera();
+captureBtn.addEventListener('click', ()=>{
+  const dataUrl = canvas.toDataURL('image/png');
+  photoPreview.src = dataUrl;
+  downloadBtn.disabled = false;
+  downloadBtn.onclick = () => {
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = `joyframe-${Date.now()}.png`;
+    a.click();
+  };
 });
+
+switchMirrorBtn.addEventListener('click', ()=>{ mirror = !mirror; });
+
+uploadSticker.addEventListener('change', (e)=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  const img = new Image();
+  img.onload = ()=>{ stickerImg = img; };
+  img.src = URL.createObjectURL(f);
+});
+
+window.addEventListener('resize', ()=>{ try{ resizeCanvas(); }catch(e){} });
+startCamera();
