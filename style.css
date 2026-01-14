@@ -26,3 +26,20 @@
 #video.f-sepia { filter: sepia(1) scaleX(-1); }
 #video.f-vintage { filter: sepia(0.5) contrast(1.2) brightness(0.9) scaleX(-1); }
 #video.f-warm { filter: sepia(0.3) saturate(1.5) scaleX(-1); }
+
+.photostrip-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: white; /* Memberikan efek kertas foto */
+  padding: 20px;
+  width: fit-content;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.photostrip-item {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+  border: 2px solid #eee;
+}

@@ -52,3 +52,20 @@ function takePhoto() {
 
     captureBtn.disabled = false;
 }
+
+// Menambahkan stiker ke dalam list
+const addSticker = (stickerUrl) => {
+  const newSticker = {
+    id: Date.now(),
+    url: stickerUrl,
+    x: 50, // posisi awal
+    y: 50,
+    size: 100
+  };
+  setStickers([...stickers, newSticker]);
+};
+
+// Mengupdate posisi saat di-drag
+const handleDrag = (id, newX, newY) => {
+  updateStickerPosition(id, { x: newX, y: newY });
+};
