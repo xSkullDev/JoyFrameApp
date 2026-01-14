@@ -1,90 +1,88 @@
 <!doctype html>
 <html lang="id">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>JoyFrame - PhotoBooth</title>
-        <link rel="stylesheet" href="styles.css" />
-    </head>
-    <body>
-        <main class="container">
-            <h1>JoyFrame PhotoBooth</h1>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>JoyFrame Photobooth</title>
+	<link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+	<header class="site-header">
+		<div class="container">
+			<h1 class="logo">JoyFrame</h1>
+			<nav>
+				<button id="menu-toggle" aria-expanded="false">Menu</button>
+				<ul id="nav">
+					<li><a href="#features">Fitur</a></li>
+					<li><a href="#gallery">Galeri</a></li>
+					<li><a href="#booking">Booking</a></li>
+				</ul>
+			</nav>
+		</div>
+	</header>
 
-            <section class="booth">
-                <div class="preview-wrap">
-                    <video id="video" autoplay playsinline></video>
-                    <canvas id="overlayCanvas" class="overlay-canvas"></canvas>
-                    <canvas id="layoutCanvas" class="layout-canvas" aria-hidden="true"></canvas>
-                    <div id="countdown" class="countdown hidden"></div>
-                    <div id="poseIndicator" class="pose-indicator hidden"></div>
-                </div>
+	<section class="hero">
+		<div class="container hero-inner">
+			<h2>Photobooth Hidupkan Momen Anda</h2>
+			<p>Solusi photobooth untuk pesta, acara perusahaan, dan pernikahan.</p>
+			<a class="btn" href="#booking">Book Sekarang</a>
+		</div>
+	</section>
 
-                <div class="controls">
-                    <div class="layout-selector">
-                        <h3>Pilih Layout</h3>
-                        <div class="layout-list">
-                            <button class="layout-thumb selected" data-layout="layout-a">
-                                <img src="https://picapicabooth.com/layouts/layout-a.png" alt="Layout A">
-                                <span>Layout A<br><small>4 pose</small></span>
-                            </button>
-                            <button class="layout-thumb" data-layout="layout-b">
-                                <img src="https://picapicabooth.com/layouts/layout-b.png" alt="Layout B">
-                                <span>Layout B<br><small>3 pose</small></span>
-                            </button>
-                            <button class="layout-thumb" data-layout="layout-c">
-                                <img src="https://picapicabooth.com/layouts/layout-c.png" alt="Layout C">
-                                <span>Layout C<br><small>2 pose</small></span>
-                            </button>
-                            <button class="layout-thumb" data-layout="layout-d">
-                                <img src="https://picapicabooth.com/layouts/layout-d.png" alt="Layout D">
-                                <span>Layout D<br><small>6 pose</small></span>
-                            </button>
-                        </div>
-                    </div>
+	<section id="features" class="container features">
+		<h3>Fitur Utama</h3>
+		<div class="grid">
+			<article class="card">
+				<h4>Template Kustom</h4>
+				<p>Template desain untuk setiap tema acara.</p>
+			</article>
+			<article class="card">
+				<h4>Pencetakan Instan</h4>
+				<p>Cetak foto langsung di tempat untuk tamu Anda.</p>
+			</article>
+			<article class="card">
+				<h4>Galeri Online</h4>
+				<p>Semua hasil foto dapat diakses secara online.</p>
+			</article>
+		</div>
+	</section>
 
-                    <div class="controls-row">
-                        <button id="captureBtn" class="big-capture" title="Ambil sesi">●</button>
+	<section id="gallery" class="container gallery">
+		<h3>Galeri</h3>
+		<p class="muted">Contoh foto; ganti dengan foto Anda sendiri.</p>
+		<div class="grid gallery-grid">
+			<!-- Ganti dengan gambar sebenarnya di assets/images/ -->
+			<img src="assets/images/photo-placeholder-1.jpg" alt="placeholder" />
+			<img src="assets/images/photo-placeholder-2.jpg" alt="placeholder" />
+			<img src="assets/images/photo-placeholder-3.jpg" alt="placeholder" />
+			<img src="assets/images/photo-placeholder-4.jpg" alt="placeholder" />
+		</div>
+	</section>
 
-                        <div class="options">
-                            <label>Filter: <select id="filterSelect">
-                                <option value="none">Normal</option>
-                                <option value="grayscale(100%)">Grayscale</option>
-                                <option value="sepia(100%)">Sepia</option>
-                                <option value="invert(100%)">Invert</option>
-                                <option value="contrast(150%)">Kontras Tinggi</option>
-                                <option value="blur(2px)">Blur</option>
-                            </select></label>
+	<section id="booking" class="container booking">
+		<h3>Booking</h3>
+		<form id="booking-form">
+			<label>Nama <input type="text" name="name" required /></label>
+			<label>Email <input type="email" name="email" required /></label>
+			<label>Tanggal acara <input type="date" name="date" required /></label>
+			<label>Paket
+				<select name="package">
+					<option>Basic</option>
+					<option>Premium</option>
+					<option>Deluxe</option>
+				</select>
+			</label>
+			<button type="submit" class="btn">Kirim Permintaan</button>
+			<p id="form-msg" class="muted" aria-live="polite"></p>
+		</form>
+	</section>
 
-                            <label>Countdown: <select id="countdownSelect">
-                                <option value="0">Mati</option>
-                                <option value="2">2s</option>
-                                <option value="3" selected>3s</option>
-                                <option value="5">5s</option>
-                            </select></label>
-                        </div>
-                    </div>
+	<footer class="site-footer">
+		<div class="container">
+			<p>© JoyFrame — Ganti konten dan foto sesuai izin Anda.</p>
+		</div>
+	</footer>
 
-                    <div class="row stickers">
-                        <span>Stiker:</span>
-                        <button class="sticker-btn" data-sticker="heart">❤</button>
-                        <button class="sticker-btn" data-sticker="sunglasses">🕶️</button>
-                        <button class="sticker-btn" data-sticker="star">⭐</button>
-                        <button id="removeSticker">Hapus Stiker</button>
-                    </div>
-
-                    <div class="row">
-                        <button id="downloadLast" disabled>Download Terakhir</button>
-                        <button id="clearGallery">Bersihkan Galeri</button>
-                    </div>
-                </div>
-            </section>
-
-            <section class="gallery">
-                <h2>Galeri</h2>
-                <div id="galleryList" class="gallery-list"></div>
-            </section>
-        </main>
-
-        <script src="script.js"></script>
-    </body>
+	<script src="assets/js/script.js"></script>
+</body>
 </html>
