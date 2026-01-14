@@ -7,6 +7,8 @@ const downloadBtn = document.getElementById('download');
 const photoPreview = document.getElementById('photoPreview');
 const switchMirrorBtn = document.getElementById('switchMirror');
 const uploadSticker = document.getElementById('uploadSticker');
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+const pipBtn = document.getElementById('pipBtn');
 
 let mirror = true;
 let stickerImg = null;
@@ -96,6 +98,42 @@ captureBtn.addEventListener('click', ()=>{
 });
 
 switchMirrorBtn.addEventListener('click', ()=>{ mirror = !mirror; });
+
+// Fullscreen toggle for the camera element
+fullscreenBtn.addEventListener('click', async ()=>{
+  const camEl = document.querySelector('.camera');
+  try{
+    if(!document.fullscreenElement){
+      await camEl.requestFullscreen();
+      fullscreenBtn.textContent = 'Keluar Layar Penuh';
+    }else{
+      await document.exitFullscreen();
+      fullscreenBtn.textContent = 'Tampilan Layar Penuh';
+    }
+  }catch(e){
+    console.warn('Fullscreen error', e);
+  }
+});
+
+// Picture-in-Picture (PiP) support
+if('pictureInPictureEnabled' in document){
+  pipBtn.disabled = false;
+  pipBtn.addEventListener('click', async ()=>{
+    try{
+      if(document.pictureInPictureElement){
+        await document.exitPictureInPicture();
+      }else{
+        if(video.readyState >= 2){
+          await video.requestPictureInPicture();
+        }
+      }
+    }catch(e){
+      console.warn('PiP error', e);
+    }
+  });
+}else{
+  pipBtn.disabled = true;
+}
 
 uploadSticker.addEventListener('change', (e)=>{
   const f = e.target.files[0];
