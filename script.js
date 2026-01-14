@@ -20,8 +20,6 @@ async function startCamera() {
     await video.play();
     if (video.readyState >= 1) setCanvasSize();
     else video.addEventListener('loadedmetadata', setCanvasSize, { once: true });
-    // Mirror preview for more natural selfie view
-    try{ video.classList.add('mirror'); overlay.classList.add('mirror'); }catch(e){}
     requestAnimationFrame(loop);
   } catch (err) {
     console.error('Camera error', err);
