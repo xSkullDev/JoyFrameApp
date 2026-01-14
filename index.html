@@ -1,20 +1,25 @@
 <!doctype html>
 <html lang="id">
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<title>JoyFrame Photobooth</title>
-	<link rel="stylesheet" href="assets/css/styles.css" />
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>JoyFrame - Photobooth Profesional</title>
+	<link rel="stylesheet" href="assets/css/styles.css">
+	<!-- Tambahkan link ke file CSS lainnya jika perlu -->
 </head>
 <body>
 	<header class="site-header">
 		<div class="container">
-			<h1 class="logo">JoyFrame</h1>
+			<h1 class="logo">
+				<img src="assets/images/logo.svg" alt="JoyFrame logo" width="160" />
+			</h1>
 			<nav>
 				<button id="menu-toggle" aria-expanded="false">Menu</button>
 				<ul id="nav">
 					<li><a href="#features">Fitur</a></li>
+					<li><a href="#pricing">Paket</a></li>
 					<li><a href="#gallery">Galeri</a></li>
+					<li><a href="#testimonials">Testimoni</a></li>
 					<li><a href="#booking">Booking</a></li>
 				</ul>
 			</nav>
@@ -23,65 +28,127 @@
 
 	<section class="hero">
 		<div class="container hero-inner">
-			<h2>Photobooth Hidupkan Momen Anda</h2>
-			<p>Solusi photobooth untuk pesta, acara perusahaan, dan pernikahan.</p>
-			<a class="btn" href="#booking">Book Sekarang</a>
+			<h2>Photobooth Profesional untuk Setiap Acara</h2>
+			<p>Foto instan, template custom, cetak on-site dan galeri online untuk berbagi momen.</p>
+			<div class="hero-actions">
+				<a class="btn" href="#booking">Book Sekarang</a>
+				<a class="btn btn-ghost" href="#pricing">Lihat Paket</a>
+			</div>
 		</div>
 	</section>
 
 	<section id="features" class="container features">
-		<h3>Fitur Utama</h3>
-		<div class="grid">
+		<h3>Fitur Unggulan</h3>
+		<div class="grid features-grid">
 			<article class="card">
-				<h4>Template Kustom</h4>
-				<p>Template desain untuk setiap tema acara.</p>
+				<h4>Foto Instan</h4>
+				<p>Proses cetak foto yang cepat dan berkualitas.</p>
 			</article>
 			<article class="card">
-				<h4>Pencetakan Instan</h4>
-				<p>Cetak foto langsung di tempat untuk tamu Anda.</p>
+				<h4>Template Kustom</h4>
+				<p>Pilih atau buat desain template sesuai keinginan.</p>
 			</article>
 			<article class="card">
 				<h4>Galeri Online</h4>
-				<p>Semua hasil foto dapat diakses secara online.</p>
+				<p>Semua foto dapat diakses dan diunduh secara online.</p>
+			</article>
+		</div>
+	</section>
+
+	<section id="pricing" class="container pricing">
+		<h3>Paket Kami</h3>
+		<div class="grid pricing-grid">
+			<article class="card">
+				<h4>Basic</h4>
+				<p class="price">Rp 1.500.000</p>
+				<ul>
+					<li>2 jam pemakaian</li>
+					<li>Template standar</li>
+					<li>Galeri online</li>
+				</ul>
+				<button class="btn">Pilih</button>
+			</article>
+			<article class="card featured">
+				<h4>Premium</h4>
+				<p class="price">Rp 3.000.000</p>
+				<ul>
+					<li>4 jam pemakaian</li>
+					<li>Template custom</li>
+					<li>Cetak instan 4R</li>
+				</ul>
+				<button class="btn">Pilih</button>
+			</article>
+			<article class="card">
+				<h4>Deluxe</h4>
+				<p class="price">Rp 5.000.000</p>
+				<ul>
+					<li>6 jam + attendant</li>
+					<li>Backdrop & properti</li>
+					<li>Album tamu & USB</li>
+				</ul>
+				<button class="btn">Pilih</button>
 			</article>
 		</div>
 	</section>
 
 	<section id="gallery" class="container gallery">
 		<h3>Galeri</h3>
-		<p class="muted">Contoh foto; ganti dengan foto Anda sendiri.</p>
+		<p class="muted">Contoh hasil acak — ganti dengan foto acara Anda.</p>
 		<div class="grid gallery-grid">
-			<!-- Ganti dengan gambar sebenarnya di assets/images/ -->
-			<img src="assets/images/photo-placeholder-1.jpg" alt="placeholder" />
-			<img src="assets/images/photo-placeholder-2.jpg" alt="placeholder" />
-			<img src="assets/images/photo-placeholder-3.jpg" alt="placeholder" />
-			<img src="assets/images/photo-placeholder-4.jpg" alt="placeholder" />
+			<img src="assets/images/photo-placeholder-1.svg" data-large="assets/images/photo-placeholder-1.svg" alt="foto 1" />
+			<img src="assets/images/photo-placeholder-2.svg" data-large="assets/images/photo-placeholder-2.svg" alt="foto 2" />
+			<img src="assets/images/photo-placeholder-3.svg" data-large="assets/images/photo-placeholder-3.svg" alt="foto 3" />
+			<img src="assets/images/photo-placeholder-4.svg" data-large="assets/images/photo-placeholder-4.svg" alt="foto 4" />
+			<img src="assets/images/photo-placeholder-5.svg" data-large="assets/images/photo-placeholder-5.svg" alt="foto 5" />
+			<img src="assets/images/photo-placeholder-6.svg" data-large="assets/images/photo-placeholder-6.svg" alt="foto 6" />
+		</div>
+	</section>
+
+	<section id="testimonials" class="container testimonials">
+		<h3>Testimoni</h3>
+		<div class="grid">
+			<blockquote class="card">"Pelayanan profesional, tamu kami sangat senang!"<footer>— Nina</footer></blockquote>
+			<blockquote class="card">"Foto bagus, proses cepat, highly recommended."<footer>— Budi</footer></blockquote>
 		</div>
 	</section>
 
 	<section id="booking" class="container booking">
-		<h3>Booking</h3>
+		<h3>Booking Sekarang</h3>
 		<form id="booking-form">
-			<label>Nama <input type="text" name="name" required /></label>
-			<label>Email <input type="email" name="email" required /></label>
-			<label>Tanggal acara <input type="date" name="date" required /></label>
-			<label>Paket
-				<select name="package">
-					<option>Basic</option>
-					<option>Premium</option>
-					<option>Deluxe</option>
-				</select>
-			</label>
+			<label for="name">Nama Lengkap</label>
+			<input type="text" id="name" name="name" required>
+
+			<label for="email">Email</label>
+			<input type="email" id="email" name="email" required>
+
+			<label for="phone">Telepon</label>
+			<input type="tel" id="phone" name="phone" required>
+
+			<label for="package">Pilih Paket</label>
+			<select id="package" name="package" required>
+				<option value="">-- Pilih Paket --</option>
+				<option value="basic">Basic</option>
+				<option value="premium">Premium</option>
+				<option value="deluxe">Deluxe</option>
+			</select>
+
 			<button type="submit" class="btn">Kirim Permintaan</button>
-			<p id="form-msg" class="muted" aria-live="polite"></p>
 		</form>
 	</section>
 
 	<footer class="site-footer">
 		<div class="container">
-			<p>© JoyFrame — Ganti konten dan foto sesuai izin Anda.</p>
+			<p>&copy; 2023 JoyFrame. All rights reserved.</p>
 		</div>
 	</footer>
+
+	<!-- Lightbox / modal -->
+	<div id="lightbox" class="lightbox" aria-hidden="true">
+		<button class="lightbox-close" aria-label="Tutup">×</button>
+		<button class="lightbox-prev" aria-label="Sebelumnya">‹</button>
+		<img class="lightbox-img" src="" alt="" />
+		<button class="lightbox-next" aria-label="Selanjutnya">›</button>
+	</div>
 
 	<script src="assets/js/script.js"></script>
 </body>
