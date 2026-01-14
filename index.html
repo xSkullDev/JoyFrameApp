@@ -1,42 +1,90 @@
 <!doctype html>
 <html lang="id">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>JoyFrame Photobooth</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="app">
-    <h1>JoyFrame Photobooth</h1>
-    <div class="camera">
-      <video id="video" autoplay playsinline></video>
-      <canvas id="canvas"></canvas>
-    </div>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>JoyFrame - PhotoBooth</title>
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <main class="container">
+            <h1>JoyFrame PhotoBooth</h1>
 
-    <div class="controls">
-      <label for="overlaySelect">Overlay:</label>
-      <select id="overlaySelect">
-        <option value="none">Tanpa Overlay</option>
-        <option value="frame">Frame Kayu</option>
-        <option value="hearts">Hearts</option>
-        <option value="vintage">Vintage</option>
-        <option value="text">Teks "Smile"</option>
-      </select>
+            <section class="booth">
+                <div class="preview-wrap">
+                    <video id="video" autoplay playsinline></video>
+                    <canvas id="overlayCanvas" class="overlay-canvas"></canvas>
+                    <canvas id="layoutCanvas" class="layout-canvas" aria-hidden="true"></canvas>
+                    <div id="countdown" class="countdown hidden"></div>
+                    <div id="poseIndicator" class="pose-indicator hidden"></div>
+                </div>
 
-      <button id="capture">Ambil Foto</button>
-      <button id="download" disabled>Download</button>
-      <button id="switchMirror">Toggle Mirror</button>
-      <input id="uploadSticker" type="file" accept="image/*">
-    </div>
+                <div class="controls">
+                    <div class="layout-selector">
+                        <h3>Pilih Layout</h3>
+                        <div class="layout-list">
+                            <button class="layout-thumb selected" data-layout="layout-a">
+                                <img src="https://picapicabooth.com/layouts/layout-a.png" alt="Layout A">
+                                <span>Layout A<br><small>4 pose</small></span>
+                            </button>
+                            <button class="layout-thumb" data-layout="layout-b">
+                                <img src="https://picapicabooth.com/layouts/layout-b.png" alt="Layout B">
+                                <span>Layout B<br><small>3 pose</small></span>
+                            </button>
+                            <button class="layout-thumb" data-layout="layout-c">
+                                <img src="https://picapicabooth.com/layouts/layout-c.png" alt="Layout C">
+                                <span>Layout C<br><small>2 pose</small></span>
+                            </button>
+                            <button class="layout-thumb" data-layout="layout-d">
+                                <img src="https://picapicabooth.com/layouts/layout-d.png" alt="Layout D">
+                                <span>Layout D<br><small>6 pose</small></span>
+                            </button>
+                        </div>
+                    </div>
 
-    <div class="preview">
-      <img id="photoPreview" alt="Preview foto">
-    </div>
+                    <div class="controls-row">
+                        <button id="captureBtn" class="big-capture" title="Ambil sesi">●</button>
 
-    <p class="hint">Izinkan kamera bila diminta. Unggah stiker untuk menambah foto.</p>
-  </div>
+                        <div class="options">
+                            <label>Filter: <select id="filterSelect">
+                                <option value="none">Normal</option>
+                                <option value="grayscale(100%)">Grayscale</option>
+                                <option value="sepia(100%)">Sepia</option>
+                                <option value="invert(100%)">Invert</option>
+                                <option value="contrast(150%)">Kontras Tinggi</option>
+                                <option value="blur(2px)">Blur</option>
+                            </select></label>
 
-  <script src="script.js"></script>
-</body>
+                            <label>Countdown: <select id="countdownSelect">
+                                <option value="0">Mati</option>
+                                <option value="2">2s</option>
+                                <option value="3" selected>3s</option>
+                                <option value="5">5s</option>
+                            </select></label>
+                        </div>
+                    </div>
+
+                    <div class="row stickers">
+                        <span>Stiker:</span>
+                        <button class="sticker-btn" data-sticker="heart">❤</button>
+                        <button class="sticker-btn" data-sticker="sunglasses">🕶️</button>
+                        <button class="sticker-btn" data-sticker="star">⭐</button>
+                        <button id="removeSticker">Hapus Stiker</button>
+                    </div>
+
+                    <div class="row">
+                        <button id="downloadLast" disabled>Download Terakhir</button>
+                        <button id="clearGallery">Bersihkan Galeri</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="gallery">
+                <h2>Galeri</h2>
+                <div id="galleryList" class="gallery-list"></div>
+            </section>
+        </main>
+
+        <script src="script.js"></script>
+    </body>
 </html>
