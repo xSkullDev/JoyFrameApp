@@ -1,155 +1,86 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>JoyFrame - Photobooth Profesional</title>
-	<link rel="stylesheet" href="assets/css/styles.css">
-	<!-- Tambahkan link ke file CSS lainnya jika perlu -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JoyFrame - Web Photobooth</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #f0f2f5; margin: 0; padding: 20px; }
+        .booth-container { position: relative; display: inline-block; border: 10px solid #fff; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; background: #000; }
+        video { display: block; width: 640px; height: 480px; transform: scaleX(-1); } /* Mirroring */
+        #frame-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .controls { margin-top: 20px; }
+        button { padding: 12px 25px; font-size: 16px; cursor: pointer; border: none; border-radius: 5px; background: #ff4757; color: white; font-weight: bold; transition: 0.3s; }
+        button:hover { background: #ff6b81; }
+        canvas { display: none; } /* Tersembunyi, hanya untuk proses rendering */
+        #gallery { margin-top: 30px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        #gallery img { width: 200px; border: 5px solid #fff; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    </style>
 </head>
 <body>
-	<header class="site-header">
-		<div class="container">
-			<h1 class="logo">
-				<img src="assets/images/logo.svg" alt="JoyFrame logo" width="160" />
-			</h1>
-			<nav>
-				<button id="menu-toggle" aria-expanded="false">Menu</button>
-				<ul id="nav">
-					<li><a href="#features">Fitur</a></li>
-					<li><a href="#pricing">Paket</a></li>
-					<li><a href="#gallery">Galeri</a></li>
-					<li><a href="#testimonials">Testimoni</a></li>
-					<li><a href="#booking">Booking</a></li>
-				</ul>
-			</nav>
-		</div>
-	</header>
 
-	<section class="hero">
-		<div class="container hero-inner">
-			<h2>Photobooth Profesional untuk Setiap Acara</h2>
-			<p>Foto instan, template custom, cetak on-site dan galeri online untuk berbagi momen.</p>
-			<div class="hero-actions">
-				<a class="btn" href="#booking">Book Sekarang</a>
-				<a class="btn btn-ghost" href="#pricing">Lihat Paket</a>
-			</div>
-		</div>
-	</section>
+    <h1>JoyFrame Photobooth</h1>
+    
+    <div class="booth-container">
+        <video id="video" autoplay playsinline></video>
+        <img id="frame-overlay" src="https://raw.githubusercontent.com/xskulldev/JoyFrameApp/main/assets/frames/frame1.png" alt="frame">
+    </div>
 
-	<section id="features" class="container features">
-		<h3>Fitur Unggulan</h3>
-		<div class="grid features-grid">
-			<article class="card">
-				<h4>Foto Instan</h4>
-				<p>Proses cetak foto yang cepat dan berkualitas.</p>
-			</article>
-			<article class="card">
-				<h4>Template Kustom</h4>
-				<p>Pilih atau buat desain template sesuai keinginan.</p>
-			</article>
-			<article class="card">
-				<h4>Galeri Online</h4>
-				<p>Semua foto dapat diakses dan diunduh secara online.</p>
-			</article>
-		</div>
-	</section>
+    <div class="controls">
+        <button id="capture">AMBIL FOTO</button>
+    </div>
 
-	<section id="pricing" class="container pricing">
-		<h3>Paket Kami</h3>
-		<div class="grid pricing-grid">
-			<article class="card">
-				<h4>Basic</h4>
-				<p class="price">Rp 1.500.000</p>
-				<ul>
-					<li>2 jam pemakaian</li>
-					<li>Template standar</li>
-					<li>Galeri online</li>
-				</ul>
-				<button class="btn">Pilih</button>
-			</article>
-			<article class="card featured">
-				<h4>Premium</h4>
-				<p class="price">Rp 3.000.000</p>
-				<ul>
-					<li>4 jam pemakaian</li>
-					<li>Template custom</li>
-					<li>Cetak instan 4R</li>
-				</ul>
-				<button class="btn">Pilih</button>
-			</article>
-			<article class="card">
-				<h4>Deluxe</h4>
-				<p class="price">Rp 5.000.000</p>
-				<ul>
-					<li>6 jam + attendant</li>
-					<li>Backdrop & properti</li>
-					<li>Album tamu & USB</li>
-				</ul>
-				<button class="btn">Pilih</button>
-			</article>
-		</div>
-	</section>
+    <canvas id="canvas" width="640" height="480"></canvas>
 
-	<section id="gallery" class="container gallery">
-		<h3>Galeri</h3>
-		<p class="muted">Contoh hasil acak — ganti dengan foto acara Anda.</p>
-		<div class="grid gallery-grid">
-			<img src="assets/images/photo-placeholder-1.svg" data-large="assets/images/photo-placeholder-1.svg" alt="foto 1" />
-			<img src="assets/images/photo-placeholder-2.svg" data-large="assets/images/photo-placeholder-2.svg" alt="foto 2" />
-			<img src="assets/images/photo-placeholder-3.svg" data-large="assets/images/photo-placeholder-3.svg" alt="foto 3" />
-			<img src="assets/images/photo-placeholder-4.svg" data-large="assets/images/photo-placeholder-4.svg" alt="foto 4" />
-			<img src="assets/images/photo-placeholder-5.svg" data-large="assets/images/photo-placeholder-5.svg" alt="foto 5" />
-			<img src="assets/images/photo-placeholder-6.svg" data-large="assets/images/photo-placeholder-6.svg" alt="foto 6" />
-		</div>
-	</section>
+    <h2>Galeri Anda</h2>
+    <div id="gallery"></div>
 
-	<section id="testimonials" class="container testimonials">
-		<h3>Testimoni</h3>
-		<div class="grid">
-			<blockquote class="card">"Pelayanan profesional, tamu kami sangat senang!"<footer>— Nina</footer></blockquote>
-			<blockquote class="card">"Foto bagus, proses cepat, highly recommended."<footer>— Budi</footer></blockquote>
-		</div>
-	</section>
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureBtn = document.getElementById('capture');
+        const frameOverlay = document.getElementById('frame-overlay');
+        const gallery = document.getElementById('gallery');
 
-	<section id="booking" class="container booking">
-		<h3>Booking Sekarang</h3>
-		<form id="booking-form">
-			<label for="name">Nama Lengkap</label>
-			<input type="text" id="name" name="name" required>
+        // 1. Akses Kamera
+        async function setupCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                video.srcObject = stream;
+            } catch (err) {
+                alert("Gagal mengakses kamera: " + err);
+            }
+        }
 
-			<label for="email">Email</label>
-			<input type="email" id="email" name="email" required>
+        // 2. Tangkap Foto dan Gabungkan dengan Frame
+        captureBtn.addEventListener('click', () => {
+            const context = canvas.getContext('2d');
+            
+            // Gambar Video ke Canvas (Mirroring)
+            context.save();
+            context.scale(-1, 1);
+            context.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+            context.restore();
 
-			<label for="phone">Telepon</label>
-			<input type="tel" id="phone" name="phone" required>
+            // Gambar Overlay Frame di atasnya
+            context.drawImage(frameOverlay, 0, 0, canvas.width, canvas.height);
 
-			<label for="package">Pilih Paket</label>
-			<select id="package" name="package" required>
-				<option value="">-- Pilih Paket --</option>
-				<option value="basic">Basic</option>
-				<option value="premium">Premium</option>
-				<option value="deluxe">Deluxe</option>
-			</select>
+            // Konversi ke Gambar
+            const imageData = canvas.toDataURL('image/png');
+            
+            // Tampilkan di Galeri
+            const img = document.createElement('img');
+            img.src = imageData;
+            gallery.prepend(img);
 
-			<button type="submit" class="btn">Kirim Permintaan</button>
-		</form>
-	</section>
+            // Automatis Download (Opsional)
+            const link = document.createElement('a');
+            link.download = 'photobooth-capture.png';
+            link.href = imageData;
+            link.click();
+        });
 
-	<footer class="site-footer">
-		<div class="container">
-			<p>&copy; 2023 JoyFrame. All rights reserved.</p>
-		</div>
-	</footer>
-
-	<!-- Lightbox / modal -->
-	<div id="lightbox" class="lightbox" aria-hidden="true">
-		<button class="lightbox-close" aria-label="Tutup">×</button>
-		<button class="lightbox-prev" aria-label="Sebelumnya">‹</button>
-		<img class="lightbox-img" src="" alt="" />
-		<button class="lightbox-next" aria-label="Selanjutnya">›</button>
-	</div>
-
-	<script src="assets/js/script.js"></script>
+        setupCamera();
+    </script>
 </body>
 </html>
