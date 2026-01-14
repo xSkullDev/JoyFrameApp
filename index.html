@@ -3,149 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Strip & Sticker Editor</title>
-    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    
-    <style>
-        body { font-family: sans-serif; background-color: #f0f0f0; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        .controls { margin-bottom: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        
-        /* Area Photo Strip */
-        #photo-strip {
-            background-color: white;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 320px;
-            min-height: 400px;
-            border: 1px solid #ddd;
-            position: relative; /* Penting untuk koordinat stiker */
-            overflow: hidden;
-        }
+    <title>JoyFrame Pro - Photobooth</title>
 
-        .photo-frame {
-            width: 100%;
-            height: 200px;
-            background-color: #eee;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid #ccc;
-        }
-
-        .photo-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Styling Stiker */
-        .sticker {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            cursor: move;
-            touch-action: none;
-            user-select: none;
-            z-index: 10;
-        }
-
-        .sticker img { width: 100%; pointer-events: none; }
-
-        button { padding: 10px 15px; cursor: pointer; border: none; border-radius: 5px; background: #007bff; color: white; margin: 5px; }
-        button:hover { background: #0056b3; }
-        .btn-download { background: #28a745; }
-    </style>
+    <!-- Gaya dipindahkan ke file style.css -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h2>Custom Photo Strip</h2>
+    <h1 style="color: var(--dark)">JoyFrame <span style="color: var(--primary)">Studio</span></h1>
 
-    <div class="controls">
-        <input type="file" id="upload-photo" accept="image/*" multiple>
-        <button onclick="addSticker('https://cdn-icons-png.flaticon.com/512/1023/1023656.png')">❤️ Tambah Hati</button>
-        <button onclick="addSticker('https://cdn-icons-png.flaticon.com/512/742/742751.png')">😊 Tambah Senyum</button>
-        <button class="btn-download" onclick="downloadStrip()">Download Hasil</button>
+    <div class="booth-wrapper">
+        <div class="video-container">
+            <video id="video" autoplay playsinline></video>
+            <img id="frame-overlay" src="" alt="">
+            <div id="countdown">3</div>
+            <div id="flash"></div>
+        </div>
     </div>
 
-    <div id="photo-strip">
+    <div class="frame-selector" id="frame-list">
         </div>
 
-    <script>
-        const stripContainer = document.getElementById('photo-strip');
-        const uploadInput = document.getElementById('upload-photo');
+    <div class="filter-selector">
+    <button class="filter-btn active" data-filter="none">Normal</button>
+    <button class="filter-btn" data-filter="grayscale(1)">B&W</button>
+    <button class="filter-btn" data-filter="sepia(1)">Sepia</button>
+    <button class="filter-btn" data-filter="sepia(0.5) contrast(1.2) brightness(0.9)">Vintage</button>
+</div>
 
-        // 1. Logika Upload Foto (Multi-Layout)
-        uploadInput.addEventListener('change', function(e) {
-            const files = e.target.files;
-            if (files.length > 4) {
-                alert("Maksimal 4 foto saja ya!");
-                return;
-            }
+    <div class="controls">
+        <button id="capture-btn">AMBIL FOTO (3s)</button>
+    </div>
 
-            // Bersihkan strip sebelum mengisi baru
-            stripContainer.innerHTML = '';
+    <div id="gallery"></div>
+    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
 
-            Array.from(files).forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const frame = document.createElement('div');
-                    frame.className = 'photo-frame';
-                    frame.innerHTML = `<img src="${event.target.result}">`;
-                    stripContainer.appendChild(frame);
-                };
-                reader.readAsDataURL(file);
-            });
-        });
-
-        // 2. Logika Menambah Stiker
-        function addSticker(url) {
-            const sticker = document.createElement('div');
-            sticker.className = 'sticker';
-            sticker.style.left = '50px';
-            sticker.style.top = '50px';
-            sticker.innerHTML = `<img src="${url}">`;
-            
-            stripContainer.appendChild(sticker);
-            makeDraggable(sticker);
-        }
-
-        // 3. Logika Drag & Drop (Interact.js)
-        function makeDraggable(element) {
-            let x = 0; let y = 0;
-
-            interact(element).draggable({
-                listeners: {
-                    move(event) {
-                        x += event.dx;
-                        y += event.dy;
-                        event.target.style.transform = `translate(${x}px, ${y}px)`;
-                    }
-                },
-                modifiers: [
-                    interact.modifiers.restrictRect({
-                        restriction: 'parent'
-                    })
-                ]
-            });
-        }
-
-        // 4. Logika Simpan Gambar (Export)
-        function downloadStrip() {
-            html2canvas(document.getElementById('photo-strip'), {
-                useCORS: true, // Untuk mengizinkan gambar dari domain lain
-                scale: 2 // Hasil lebih tajam
-            }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'my-photo-strip.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            });
-        }
-    </script>
-
+    <!-- Skrip dipindahkan ke file script.js -->
+    <script src="script.js"></script>
 </body>
 </html>

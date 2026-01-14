@@ -1,114 +1,163 @@
-/* 1. Pengaturan Dasar & Font */
+:root {
+    --primary: #ff4757;
+    --dark: #2f3542;
+    --light: #ffffff;
+}
+
+/* Filter Selector Style */
+.filter-selector {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.filter-btn {
+    padding: 8px 15px;
+    border: 2px solid var(--dark);
+    border-radius: 20px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.filter-btn.active {
+    background: var(--dark);
+    color: white;
+}
+
+/* Pratinjau Video dengan Filter */
+#video.f-grayscale { filter: grayscale(1) scaleX(-1); }
+#video.f-sepia { filter: sepia(1) scaleX(-1); }
+#video.f-vintage { filter: sepia(0.5) contrast(1.2) brightness(0.9) scaleX(-1); }
+#video.f-warm { filter: sepia(0.3) saturate(1.5) scaleX(-1); }
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #eef2f5;
+    background: #f1f2f6;
     margin: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 40px 20px;
-    color: #333;
-}
-
-h2 {
-    margin-bottom: 20px;
-    color: #2c3e50;
-}
-
-/* 2. Kontainer Kontrol (Panel Navigasi) */
-.controls {
-    background: white;
     padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    margin-bottom: 30px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    max-width: 600px;
+    color: var(--dark);
 }
 
-/* 3. Styling Tombol */
-button {
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: 600;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-button:active {
-    transform: scale(0.95);
-}
-
-.btn-add { background-color: #f8f9fa; border: 1px solid #ddd; color: #555; }
-.btn-add:hover { background-color: #e9ecef; }
-
-.btn-primary { background-color: #4a90e2; color: white; }
-.btn-primary:hover { background-color: #357abd; }
-
-.btn-download { background-color: #27ae60; color: white; }
-.btn-download:hover { background-color: #219150; }
-
-/* 4. Canvas Utama (Photo Strip) */
-#photo-strip {
-    background-color: #ffffff;
-    padding: 20px; /* Jarak antara foto dan tepi kertas */
-    width: 340px;
-    min-height: 500px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Jarak antar foto */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    position: relative; /* Menjadi jangkar untuk posisi stiker */
-    border: 1px solid #ddd;
-}
-
-/* 5. Frame Foto Individu */
-.photo-frame {
-    width: 100%;
-    height: 220px; /* Ukuran frame foto */
-    background-color: #f7f7f7;
-    border: 1px solid #eee;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* Booth */
+.booth-wrapper {
     position: relative;
+    width: 640px;
+    border-radius: 20px;
+    background: var(--dark);
+    padding: 15px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
 }
 
-.photo-frame img {
+.video-container {
+    position: relative;
+    width: 640px;
+    height: 480px;
+    background: #000;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+video {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Foto akan mengisi frame secara proporsional */
+    object-fit: cover;
+    transform: scaleX(-1); /* mirror preview */
 }
 
-/* 6. Elemen Stiker (Interactive Layer) */
-.sticker {
+/* Overlay Frame */
+#frame-overlay {
     position: absolute;
-    width: 70px;
-    height: 70px;
-    z-index: 99; /* Pastikan stiker berada di paling atas */
-    cursor: grab;
-    touch-action: none; /* Penting untuk device layar sentuh */
-    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
-}
-
-.sticker:active {
-    cursor: grabbing;
-}
-
-.sticker img {
+    top: 0;
+    left: 0;
     width: 100%;
-    user-select: none;
-    -webkit-user-drag: none;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+    object-fit: cover;
 }
 
-/* 7. Input File Styling */
-input[type="file"] {
-    padding: 8px;
-    font-size: 14px;
+/* Countdown Visual */
+#countdown {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 120px;
+    color: white;
+    font-weight: bold;
+    text-shadow: 0 0 20px rgba(0,0,0,0.5);
+    z-index: 10;
+    display: none;
+}
+
+/* Flash Effect */
+#flash {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    opacity: 0;
+    z-index: 15;
+    pointer-events: none;
+    transition: opacity 150ms ease;
+}
+
+/* Panel Kontrol */
+.controls { margin-top: 15px; display: flex; gap: 15px; align-items: center; }
+button#capture-btn {
+    padding: 12px 30px;
+    font-size: 16px;
+    border: none;
+    border-radius: 50px;
+    background: var(--primary);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(255, 71, 87, 0.35);
+    transition: transform .12s ease;
+}
+button#capture-btn:active { transform: translateY(2px); }
+button#capture-btn:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; }
+
+/* Frame Selector */
+.frame-selector { margin-top: 20px; display: flex; gap: 10px; overflow-x: auto; padding: 10px; width: 640px; }
+.frame-option { width: 100px; height: 75px; border: 3px solid transparent; border-radius: 8px; cursor: pointer; transition: 0.2s; background: #fff; object-fit: cover; }
+.frame-option.active { border-color: var(--primary); transform: scale(1.05); }
+
+/* Gallery */
+#gallery { margin-top: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 640px; }
+#gallery img { width: 100%; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 5px solid white; object-fit: cover; }
+
+/* Photostrip (optional) */
+.photostrip-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: white;
+  padding: 20px;
+  width: fit-content;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.photostrip-item {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+  border: 2px solid #eee;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+    .booth-wrapper, .frame-selector, #gallery { width: 320px; }
+    .video-container { width: 320px; height: 240px; }
+    .frame-option { width: 70px; height: 50px; }
+    #gallery { grid-template-columns: repeat(2, 1fr); }
 }
