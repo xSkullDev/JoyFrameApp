@@ -154,11 +154,9 @@ if (flipBtn) {
     mirrored = !mirrored;
     if (mirrored) {
       video.classList.add('mirror');
-      overlay.classList.add('mirror');
       flipBtn.textContent = 'Unflip';
     } else {
       video.classList.remove('mirror');
-      overlay.classList.remove('mirror');
       flipBtn.textContent = 'Flip';
     }
   });
