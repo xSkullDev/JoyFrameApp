@@ -98,8 +98,16 @@ function capturePhoto() {
   tmp.width = video.videoWidth;
   tmp.height = video.videoHeight;
   const tctx = tmp.getContext('2d');
-  // draw video
-  tctx.drawImage(video, 0, 0, tmp.width, tmp.height);
+  // draw video (mirror when preview is flipped)
+  tctx.save();
+  if (mirrored) {
+    tctx.translate(tmp.width, 0);
+    tctx.scale(-1, 1);
+    tctx.drawImage(video, 0, 0, tmp.width, tmp.height);
+  } else {
+    tctx.drawImage(video, 0, 0, tmp.width, tmp.height);
+  }
+  tctx.restore();
   // draw overlays using same logic but scaled
   // reuse drawOverlay by drawing existing overlay canvas onto tmp
   tctx.drawImage(overlay, 0, 0, tmp.width, tmp.height);
