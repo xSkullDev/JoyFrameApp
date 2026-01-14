@@ -18,7 +18,12 @@ async function startCamera(){
     const stream = await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280}, height:{ideal:720}}, audio:false});
     video.srcObject = stream;
     await video.play();
-    resizeCanvas();
+    // Ensure canvas is sized after metadata is available
+    if (video.readyState >= 1) {
+      resizeCanvas();
+    } else {
+      video.addEventListener('loadedmetadata', resizeCanvas, { once: true });
+    }
     requestAnimationFrame(drawLoop);
   }catch(e){
     console.error('Kamera error', e);
@@ -88,23 +93,32 @@ captureBtn.addEventListener('click', ()=>{
 
 switchMirrorBtn.addEventListener('click', ()=>{ mirror = !mirror; });
 
-// Fullscreen
-fullscreenBtn.addEventListener('click', async ()=>{
-  const camEl = document.getElementById('cameraArea');
-  try{
-    if(!document.fullscreenElement){ await camEl.requestFullscreen(); fullscreenBtn.textContent = 'Keluar Penuh'; }
-    else{ await document.exitFullscreen(); fullscreenBtn.textContent = 'Layar Penuh'; }
-    setTimeout(resizeCanvas,300);
-  }catch(e){ console.warn('Fullscreen error',e); }
-});
+// Fullscreen (only if button exists)
+if (fullscreenBtn) {
+  fullscreenBtn.addEventListener('click', async ()=>{
+    const camEl = document.getElementById('cameraArea');
+    try{
+      if(!document.fullscreenElement){ await camEl.requestFullscreen(); fullscreenBtn.textContent = 'Keluar Penuh'; }
+      else{ await document.exitFullscreen(); fullscreenBtn.textContent = 'Layar Penuh'; }
+      setTimeout(resizeCanvas,300);
+    }catch(e){ console.warn('Fullscreen error',e); }
+  });
+}
 
-// Picture-in-Picture
-if('pictureInPictureEnabled' in document){ pipBtn.disabled = false; pipBtn.addEventListener('click', async ()=>{
-  try{
-    if(document.pictureInPictureElement) await document.exitPictureInPicture();
-    else if(video.readyState >= 2) await video.requestPictureInPicture();
-  }catch(e){ console.warn('PiP error', e); }
-}); }else{ pipBtn.disabled = true; }
+// Picture-in-Picture (safe-check button)
+if (pipBtn) {
+  if('pictureInPictureEnabled' in document){
+    pipBtn.disabled = false;
+    pipBtn.addEventListener('click', async ()=>{
+      try{
+        if(document.pictureInPictureElement) await document.exitPictureInPicture();
+        else if(video.readyState >= 2) await video.requestPictureInPicture();
+      }catch(e){ console.warn('PiP error', e); }
+    });
+  }else{
+    pipBtn.disabled = true;
+  }
+}
 
 uploadSticker.addEventListener('change',(e)=>{
   const f = e.target.files[0]; if(!f) return; const img = new Image(); img.onload = ()=>{ stickerImg = img; URL.revokeObjectURL(img.src); };
