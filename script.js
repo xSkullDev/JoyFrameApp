@@ -87,18 +87,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Terapkan filter ke canvas (CSS filter string langsung didukung oleh ctx.filter)
         ctx.filter = currentFilter === 'none' ? 'none' : currentFilter;
 
-        // Mirror draw video
-        ctx.save();
-        ctx.scale(-1, 1);
-        ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
-        ctx.restore();
+        // Gambar video WITHOUT mirror (tampilan sekarang tidak terbalik)
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // Gambar frame (biasanya frame PNG dengan transparansi)
-        // Jika ingin frame tidak terkena filter, simpan filter, reset, lalu gambar frame
+        // Gambar frame tanpa filter agar warna aslinya tetap
         const prevFilter = ctx.filter;
-        // pastikan frame sudah termuat
         if (frameOverlay.complete && frameOverlay.naturalWidth !== 0) {
-            // gambar frame tanpa filter agar warna aslinya tetap
             ctx.filter = 'none';
             ctx.drawImage(frameOverlay, 0, 0, canvas.width, canvas.height);
             ctx.filter = prevFilter;

@@ -28,10 +28,10 @@
 }
 
 /* Pratinjau Video dengan Filter */
-#video.f-grayscale { filter: grayscale(1) scaleX(-1); }
-#video.f-sepia { filter: sepia(1) scaleX(-1); }
-#video.f-vintage { filter: sepia(0.5) contrast(1.2) brightness(0.9) scaleX(-1); }
-#video.f-warm { filter: sepia(0.3) saturate(1.5) scaleX(-1); }
+#video.f-grayscale { filter: grayscale(1); }
+#video.f-sepia { filter: sepia(1); }
+#video.f-vintage { filter: sepia(0.5) contrast(1.2) brightness(0.9); }
+#video.f-warm { filter: sepia(0.3) saturate(1.5); }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
