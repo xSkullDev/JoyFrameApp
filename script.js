@@ -8,10 +8,12 @@ const layoutButtons = Array.from(document.querySelectorAll('.layout-thumb'));
 const stickerBtns = Array.from(document.querySelectorAll('.sticker-btn'));
 const uploadSticker = document.getElementById('uploadSticker');
 const countdownEl = document.getElementById('countdown');
+const flipBtn = document.getElementById('flipBtn');
 
 let currentOverlay = 'none';
 let stickerImage = null; // Image object for uploaded sticker
 let emojiSticker = null; // string for emoji sticker
+let mirrored = false;
 
 async function startCamera() {
   try {
@@ -145,6 +147,22 @@ stickerBtns.forEach(b => b.addEventListener('click', ()=>{
   emojiSticker = b.dataset.emoji || null;
   stickerImage = null;
 }));
+
+// Flip/mirror toggle
+if (flipBtn) {
+  flipBtn.addEventListener('click', () => {
+    mirrored = !mirrored;
+    if (mirrored) {
+      video.classList.add('mirror');
+      overlay.classList.add('mirror');
+      flipBtn.textContent = 'Unflip';
+    } else {
+      video.classList.remove('mirror');
+      overlay.classList.remove('mirror');
+      flipBtn.textContent = 'Flip';
+    }
+  });
+}
 
 uploadSticker.addEventListener('change', (e) => {
   const f = e.target.files[0];
