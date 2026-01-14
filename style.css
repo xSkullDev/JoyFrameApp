@@ -1,0 +1,28 @@
+/* Filter Selector Style */
+.filter-selector {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.filter-btn {
+    padding: 8px 15px;
+    border: 2px solid var(--dark);
+    border-radius: 20px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.filter-btn.active {
+    background: var(--dark);
+    color: white;
+}
+
+/* Pratinjau Video dengan Filter */
+#video.f-grayscale { filter: grayscale(1) scaleX(-1); }
+#video.f-sepia { filter: sepia(1) scaleX(-1); }
+#video.f-vintage { filter: sepia(0.5) contrast(1.2) brightness(0.9) scaleX(-1); }
+#video.f-warm { filter: sepia(0.3) saturate(1.5) scaleX(-1); }
