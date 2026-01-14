@@ -79,7 +79,7 @@ video {
     pointer-events: none;
     z-index: 5;
     object-fit: cover;
-    transform: scaleX(-1); /* mirror overlay to match preview */
+    
 }
 
 /* Countdown Visual */
