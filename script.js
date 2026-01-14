@@ -1,71 +1,131 @@
-let currentFilter = "none";
+/**
+ * PHOTO STRIP & STICKER ENGINE
+ * Fitur: Multi-upload, Drag & Drop Stickers, Export Image
+ */
 
-// 1. Logika Klik Tombol Filter
-document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.onclick = () => {
-        // Update UI tombol
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        
-        // Simpan filter yang dipilih
-        currentFilter = btn.getAttribute('data-filter');
-        
-        // Terapkan ke Video Preview
-        video.style.filter = currentFilter === "none" ? "none" : currentFilter;
-        // Ingat: ScaleX(-1) untuk mirroring harus tetap ada jika diatur via CSS tunggal, 
-        // tapi karena kita pakai inline style filter, CSS transform di style awal akan tetap jalan.
-    };
+// 1. Inisialisasi Variabel Utama
+const photoStrip = document.getElementById('photo-strip');
+const uploadInput = document.getElementById('upload-photo');
+
+// 2. Fungsi Logika Upload Foto (Multi-Layout)
+uploadInput.addEventListener('change', function(e) {
+    const files = e.target.files;
+    
+    // Validasi jumlah foto
+    if (files.length > 4) {
+        alert("Maksimal pilih 4 foto untuk hasil terbaik!");
+        return;
+    }
+
+    // Bersihkan kontainer sebelum merender ulang foto
+    // Namun tetap pertahankan stiker yang sudah ada jika diinginkan, 
+    // atau bersihkan semua dengan: photoStrip.innerHTML = '';
+    const existingStickers = document.querySelectorAll('.sticker');
+    photoStrip.innerHTML = ''; 
+
+    Array.from(files).forEach((file) => {
+        if (!file.type.startsWith('image/')) return; // Validasi tipe file
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const frame = document.createElement('div');
+            frame.className = 'photo-frame';
+            
+            const img = document.createElement('img');
+            img.src = event.target.result;
+            img.alt = "Uploaded Photo";
+            
+            frame.appendChild(img);
+            photoStrip.appendChild(frame);
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // Kembalikan stiker ke kontainer jika tadi tidak ingin menghapusnya
+    existingStickers.forEach(s => photoStrip.appendChild(s));
 });
 
-// 2. Perbarui Fungsi takePhoto()
-function takePhoto() {
-    flashEl.style.opacity = '1';
-    setTimeout(() => flashEl.style.opacity = '0', 100);
-
-    const ctx = canvas.getContext('2d');
+// 3. Fungsi Menambahkan Stiker Baru
+function addSticker(imgUrl) {
+    const sticker = document.createElement('div');
+    sticker.className = 'sticker';
     
-    // PENTING: Terapkan filter ke Canvas sebelum menggambar
-    ctx.filter = currentFilter;
-
-    // Gambar Video (Mirroring)
-    ctx.save();
-    ctx.scale(-1, 1);
-    ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
-    ctx.restore();
-
-    // Gambar Frame (Tanpa filter jika ingin frame tetap berwarna asli)
-    // Jika ingin frame ikut terfilter, biarkan ctx.filter di atas. 
-    // Jika ingin frame tetap berwarna asli, reset filter di sini:
-    // ctx.filter = "none"; 
+    // Set posisi awal di tengah agar mudah terlihat
+    sticker.style.left = '20px';
+    sticker.style.top = '20px';
     
-    ctx.drawImage(frameOverlay, 0, 0, canvas.width, canvas.height);
-
-    const data = canvas.toDataURL('image/png');
     const img = document.createElement('img');
-    img.src = data;
-    gallery.prepend(img);
+    img.src = imgUrl;
+    img.setAttribute('draggable', 'false'); // Mencegah drag bawaan browser
+    
+    sticker.appendChild(img);
+    photoStrip.appendChild(sticker);
 
-    const a = document.createElement('a');
-    a.href = data;
-    a.download = `JoyFrame_${Date.now()}.png`;
-    a.click();
-
-    captureBtn.disabled = false;
+    // Aktifkan fungsi drag untuk stiker ini
+    initDraggable(sticker);
 }
 
-// Menambahkan stiker ke dalam list
-const addSticker = (stickerUrl) => {
-  const newSticker = {
-    id: Date.now(),
-    url: stickerUrl,
-    x: 50, // posisi awal
-    y: 50,
-    size: 100
-  };
-  setStickers([...stickers, newSticker]);
-};
+// 4. Inisialisasi Interact.js untuk Drag & Drop
+function initDraggable(element) {
+    // Inisialisasi koordinat internal untuk elemen ini
+    let x = 0;
+    let y = 0;
 
-// Mengupdate posisi saat di-drag
-const handleDrag = (id, newX, newY) => {
-  updateStickerPosition(id, { x: newX, y: newY });
-};
+    interact(element).draggable({
+        // Mengaktifkan inertia untuk pergerakan halus
+        inertia: true,
+        // Memastikan stiker tidak keluar dari area photo-strip
+        modifiers: [
+            interact.modifiers.restrictRect({
+                restriction: 'parent',
+                endOnly: true
+            })
+        ],
+        listeners: {
+            move(event) {
+                // Kalkulasi posisi baru berdasarkan pergerakan mouse/jari
+                x += event.dx;
+                y += event.dy;
+
+                // Terapkan transformasi CSS
+                event.target.style.transform = `translate(${x}px, ${y}px)`;
+            }
+        }
+    });
+}
+
+// 5. Fungsi Export/Download Hasil Akhir
+async function downloadStrip() {
+    const btn = document.querySelector('.btn-download');
+    const originalText = btn.innerText;
+    
+    try {
+        btn.innerText = "Processing...";
+        btn.disabled = true;
+
+        // Gunakan html2canvas untuk mengambil snapshot elemen #photo-strip
+        const canvas = await html2canvas(photoStrip, {
+            useCORS: true,       // Mendukung gambar dari domain luar
+            scale: 3,            // Meningkatkan resolusi hasil (3x lipat)
+            backgroundColor: null // Background transparan jika perlu
+        });
+
+        // Konversi canvas ke URL Gambar
+        const imageData = canvas.toDataURL("image/png");
+        
+        // Buat elemen link sementara untuk memicu download
+        const link = document.createElement('a');
+        link.download = `photostrip-${Date.now()}.png`;
+        link.href = imageData;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+    } catch (error) {
+        console.error("Gagal menyimpan gambar:", error);
+        alert("Maaf, terjadi kesalahan saat menyimpan gambar.");
+    } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
+    }
+}

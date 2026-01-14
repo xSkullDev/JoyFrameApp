@@ -1,45 +1,114 @@
-/* Filter Selector Style */
-.filter-selector {
-    margin-top: 15px;
+/* 1. Pengaturan Dasar & Font */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #eef2f5;
+    margin: 0;
     display: flex;
-    gap: 10px;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    color: #333;
 }
 
-.filter-btn {
-    padding: 8px 15px;
-    border: 2px solid var(--dark);
-    border-radius: 20px;
+h2 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+/* 2. Kontainer Kontrol (Panel Navigasi) */
+.controls {
     background: white;
-    cursor: pointer;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    max-width: 600px;
+}
+
+/* 3. Styling Tombol */
+button {
+    padding: 10px 20px;
     font-size: 14px;
-    transition: 0.2s;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.filter-btn.active {
-    background: var(--dark);
-    color: white;
+button:active {
+    transform: scale(0.95);
 }
 
-/* Pratinjau Video dengan Filter */
-#video.f-grayscale { filter: grayscale(1) scaleX(-1); }
-#video.f-sepia { filter: sepia(1) scaleX(-1); }
-#video.f-vintage { filter: sepia(0.5) contrast(1.2) brightness(0.9) scaleX(-1); }
-#video.f-warm { filter: sepia(0.3) saturate(1.5) scaleX(-1); }
+.btn-add { background-color: #f8f9fa; border: 1px solid #ddd; color: #555; }
+.btn-add:hover { background-color: #e9ecef; }
 
-.photostrip-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  background-color: white; /* Memberikan efek kertas foto */
-  padding: 20px;
-  width: fit-content;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+.btn-primary { background-color: #4a90e2; color: white; }
+.btn-primary:hover { background-color: #357abd; }
+
+.btn-download { background-color: #27ae60; color: white; }
+.btn-download:hover { background-color: #219150; }
+
+/* 4. Canvas Utama (Photo Strip) */
+#photo-strip {
+    background-color: #ffffff;
+    padding: 20px; /* Jarak antara foto dan tepi kertas */
+    width: 340px;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Jarak antar foto */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    position: relative; /* Menjadi jangkar untuk posisi stiker */
+    border: 1px solid #ddd;
 }
 
-.photostrip-item {
-  width: 300px;
-  height: 200px;
-  object-fit: cover;
-  border: 2px solid #eee;
+/* 5. Frame Foto Individu */
+.photo-frame {
+    width: 100%;
+    height: 220px; /* Ukuran frame foto */
+    background-color: #f7f7f7;
+    border: 1px solid #eee;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Foto akan mengisi frame secara proporsional */
+}
+
+/* 6. Elemen Stiker (Interactive Layer) */
+.sticker {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    z-index: 99; /* Pastikan stiker berada di paling atas */
+    cursor: grab;
+    touch-action: none; /* Penting untuk device layar sentuh */
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+}
+
+.sticker:active {
+    cursor: grabbing;
+}
+
+.sticker img {
+    width: 100%;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* 7. Input File Styling */
+input[type="file"] {
+    padding: 8px;
+    font-size: 14px;
 }
